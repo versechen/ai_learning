@@ -1,0 +1,10 @@
+# Deep Learning 框架
+torch>=1.9.0
+
+# 代码质量工具
+flake8>=5.0.0
+autopep8>=1.7.0
+black>=22.0.0
+
+# 开发工具 (可选)
+isort>=5.10.0
