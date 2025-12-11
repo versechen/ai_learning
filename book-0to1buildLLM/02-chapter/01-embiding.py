@@ -1,9 +1,11 @@
+import re
 import urllib.request
+
 url = ("https://raw.githubusercontent.com/rasbt/"
        "LLMs-from-scratch/main/ch02/01_main-chapter-code/"
        "the-verdict.txt")
 # 下载到当前目录
-file_path = "./book-0to1buildLLM/02-chapter/the-verdict.txt"
+file_path = "./the-verdict.txt"
 urllib.request.urlretrieve(url, file_path)
 with open(file_path, "r", encoding="utf-8") as f:
     raw_text = f.read()
@@ -11,7 +13,7 @@ print("Total number of character:", len(raw_text))
 print(raw_text[:99])
 
 # 空格分词
-import re
+
 text = "Hello, world. This, is a test."
 result = re.split(r'(\s)', text)
 print(result)
@@ -25,7 +27,6 @@ result = [item.strip() for item in result if item.strip()]
 print(result)
 
 
-
 preprocessed = re.split(r'([,.:;?_!"()\']|--|\s)', raw_text)
 preprocessed = [item.strip() for item in preprocessed if item.strip()]
 print(len(preprocessed))
@@ -35,29 +36,32 @@ print(preprocessed[:30])
 all_words = sorted(set(preprocessed))
 vocab_size = len(all_words)
 print("Vocabulary size:", vocab_size)
-vocab = {token:integer for integer,token in enumerate(all_words)}
+vocab = {token: integer for integer, token in enumerate(all_words)}
 for i, item in enumerate(vocab.items()):
     print(item)
     if i >= 50:
         break
 
 # 简单的分词器实现
+
+
 class SimpleTokenizerV1:
     def __init__(self, vocab):
         self.str_to_int = vocab
-        self.int_to_str = {i:s for s,i in vocab.items()}
-    
+        self.int_to_str = {i: s for s, i in vocab.items()}
+
     def encode(self, text):
         preprocessed = re.split(r'([,.?_!"()\']|--|\s)', text)
         preprocessed = [
             item.strip() for item in preprocessed if item.strip()
         ]
-        
-        preprocessed = [s if s in self.str_to_int else "<|unk|>" for s in preprocessed]
-         
+
+        preprocessed = [
+            s if s in self.str_to_int else "<|unk|>" for s in preprocessed]
+
         ids = [self.str_to_int[s] for s in preprocessed]
         return ids
-    
+
     def decode(self, ids):
         text = " ".join([self.int_to_str[i] for i in ids])
         text = re.sub(r'\s+([,.?!"()\'])', r'\1', text)
@@ -74,7 +78,7 @@ print(tokenizer.decode(ids))
 # 扩展词汇表
 all_tokens = sorted(list(set(preprocessed)))
 all_tokens.extend(["<|endoftext|>", "<|unk|>"])
-vocab = {token:integer for integer,token in enumerate(all_tokens)}
+vocab = {token: integer for integer, token in enumerate(all_tokens)}
 
 print(len(vocab.items()))
 
